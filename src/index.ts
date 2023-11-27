@@ -73,7 +73,25 @@ Supertokens.init({
         },
       },
     }), // initializes signin / sign up features
-    Session.init(), // initializes session features
+    Session.init({
+      override: {
+        functions(originalImplementation) {
+          return {
+            ...originalImplementation,
+            async createNewSession({ accessTokenPayload, ...input }) {
+              return originalImplementation.createNewSession({
+                ...input,
+                accessTokenPayload: {
+                  iss: accessTokenPayload.iss,
+                  roles: accessTokenPayload['st-role'].v,
+                  email_verified: accessTokenPayload['st-ev'].v,
+                },
+              });
+            },
+          };
+        },
+      },
+    }), // initializes session features
     Dashboard.init(), // initializes dashboard features
     UserRoles.init(), // initializes user roles features
     UserMetadata.init(), // initializes user metadata features
@@ -87,7 +105,7 @@ if (env.NODE_ENV !== 'test') app.use(morgan(env.NODE_ENV === 'prod' ? 'tiny' : '
 app.use(cors({ origin: '*', allowedHeaders: ['content-type', ...Supertokens.getAllCORSHeaders()], credentials: true }));
 
 app.use(middleware());
-app.use('/auth', router);
+app.use(env.BASE_URL_PATH, router);
 
 app.use(errorHandler());
 

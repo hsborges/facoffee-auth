@@ -7,8 +7,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-facoffee}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-facoffee}
       POSTGRES_DB: ${POSTGRES_DB:-facoffee_auth_db}
-    ports:
-      - 5432:5432
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
