@@ -102,7 +102,9 @@ Supertokens.init({
 let app = express();
 
 if (env.NODE_ENV !== 'test') app.use(morgan(env.NODE_ENV === 'prod' ? 'tiny' : 'dev'));
-app.use(cors({ origin: '*', allowedHeaders: ['content-type', ...Supertokens.getAllCORSHeaders()], credentials: true }));
+app.use(
+  cors({ origin: true, allowedHeaders: ['content-type', ...Supertokens.getAllCORSHeaders()], credentials: true }),
+);
 
 app.use(middleware());
 app.use(env.BASE_URL_PATH, router);

@@ -8,18 +8,6 @@ import UserMetadata from 'supertokens-node/recipe/usermetadata';
 
 export const router = Router();
 
-router.get('/verify-email', async (req, res, next) => {
-  try {
-    let { token, tenantId } = req.query;
-    if (!token || !tenantId) throw new Error('Missing token or tenantId');
-    const result = await EmailVerification.verifyEmailUsingToken(tenantId.toString(), token.toString());
-    if (result.status === 'OK') return res.status(StatusCodes.OK).send('Email verified');
-    res.status(StatusCodes.BAD_REQUEST).send(result.status);
-  } catch (err) {
-    next(err);
-  }
-});
-
 router.get('/me', verifySession(), async (req: SessionRequest, res, next) => {
   const userId = req.session!.getUserId();
   const user = await Supertokens.getUser(userId);
