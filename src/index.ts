@@ -33,7 +33,7 @@ Supertokens.init({
           {
             id: 'email',
             async validate(value) {
-              return value.endsWith('@ufms.br') ? undefined : 'Only @ufms.br emails are allowed';
+              return value.endsWith('@ufms.br') ? undefined : 'Somente emails "ufms.br" são permitidos';
             },
           },
           { id: 'password' },
@@ -79,12 +79,15 @@ Supertokens.init({
           return {
             ...originalImplementation,
             async createNewSession({ accessTokenPayload, ...input }) {
+              const userMetadata = await UserMetadata.getUserMetadata(input.userId);
+
               return originalImplementation.createNewSession({
                 ...input,
                 accessTokenPayload: {
                   iss: accessTokenPayload.iss,
                   roles: accessTokenPayload['st-role'].v,
                   email_verified: accessTokenPayload['st-ev'].v,
+                  ...(userMetadata.status === 'OK' ? userMetadata.metadata : {}),
                 },
               });
             },
