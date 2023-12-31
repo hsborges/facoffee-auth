@@ -74,6 +74,7 @@ Supertokens.init({
       },
     }), // initializes signin / sign up features
     Session.init({
+      exposeAccessTokenToFrontendInCookieBasedAuth: true,
       override: {
         functions(originalImplementation) {
           return {
