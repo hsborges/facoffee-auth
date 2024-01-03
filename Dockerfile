@@ -1,5 +1,5 @@
 # ---- Base Node ----
-FROM node:18 AS build
+FROM node:lts AS build
 WORKDIR /app
 COPY package.json ./
 RUN yarn install
@@ -7,7 +7,7 @@ COPY . ./
 RUN yarn build
 
 # --- Release with Alpine ----
-FROM node:18-alpine AS release
+FROM node:lts-alpine AS release
 WORKDIR /app
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/dist ./dist
